@@ -25,6 +25,7 @@ jobs:
       - name: Cache docker layers
         uses: actions/cache@v2
         with:
+          echo "Name:      ${{ steps.buildx.outputs.name }}"
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-buildx-${{ env.VERSION }} # runner 설정에서 읽어들일거에요.
           restore-keys: |
@@ -40,7 +41,12 @@ jobs:
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v2
+        
         with:
+          echo "Name:      ${{ steps.buildx.outputs.name }}"
+          echo "Status:    ${{ steps.buildx.outputs.status }}"
+          echo "Flags:     ${{ steps.buildx.outputs.flags }}"
+          echo "Platforms: ${{ steps.buildx.outputs.platforms }}"
           builder: ${{ steps.buildx.outputs.name }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }}
@@ -48,11 +54,7 @@ jobs:
           buildkitd-flags: --debug
       
       - name: Inspect builder
-        run: |
-          echo "Name:      ${{ steps.buildx.outputs.name }}"
-          echo "Status:    ${{ steps.buildx.outputs.status }}"
-          echo "Flags:     ${{ steps.buildx.outputs.flags }}"
-          echo "Platforms: ${{ steps.buildx.outputs.platforms }}"
+
 
 
   deploy:
