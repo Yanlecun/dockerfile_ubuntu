@@ -61,5 +61,5 @@ jobs:
           password: ${{ secrets.UBUNTU_TOKEN }}
       - name: Docker run
         run: |
-          docker ps -q --filter "name={woosong1}" | grep -q . && docker stop {woosong1} && docker rm -fv {woosong1}
+          docker ps -q --filter "name={woosong}" | grep -q . && docker stop {woosong} && docker rm -fv {woosong}
           docker run -d -p 8080:8080 --name cicd --restart always ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }}
