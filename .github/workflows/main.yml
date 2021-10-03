@@ -24,6 +24,7 @@ jobs:
         
       - name: Cache docker layers
         uses: actions/cache@v2
+        id : cachi
         with:
           path: /tmp/.buildx-cache
           key: ${{ runner.os }}-buildx-${{ env.VERSION }} # runner 설정에서 읽어들일거에요.
@@ -47,7 +48,8 @@ jobs:
         uses: docker/build-push-action@v2
         
         with:
-          builder: ${{ steps.buildx.outputs.name }}
+          builder: ${{ steps.cachi.outputs.name }}
+          echo : ${{ steps.cachi.outputs.name }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }}
           cache-from: type=local,src=/tmp/.buildx-cache
