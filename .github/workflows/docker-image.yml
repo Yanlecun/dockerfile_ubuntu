@@ -65,7 +65,7 @@ jobs:
         uses: docker/login-action@v1
         with:
           registry: ghcr.io
-          username: ${{ github.yanlecun }}
+          username: ${{ github.actor }}
           password: ${{ secrets.UBUNTU_TOKEN }}
           buildkitd-flags: --debug
       - name: Docker run
