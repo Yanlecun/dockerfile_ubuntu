@@ -29,37 +29,30 @@ jobs:
           key: ${{ runner.os }}-buildx-${{ env.VERSION }} # runner 설정에서 읽어들일거에요.
           restore-keys: |
             ${{ runner.os }}-buildx-
+      - name : test
+        run : |
+          dir
+          cd /tmp/
+          dir
             
-      #- name: Login to ghcr
-        #uses: docker/login-action@v1
-        #with:
-          #registry: ghcr.io
-          #username: ${{ github.actor }}
-          #password: ${{ secrets.UBUNTU_TOKEN }}
+      - name: Login to ghcr
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.UBUNTU_TOKEN }}
           
       - name: Build and push
-        id: docker-build
+        id: docker_build
         uses: docker/build-push-action@v2
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ secrets.AWS_ECR_REPOSITORY_NAME }}
-          IMAGE_TAG: woosong
+        
         with:
-          push: true
-          echo : "name : ${{env.ECR_REGISTRY}}"
-          tags: "${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}"
-          # (3)
+          builder: ${{ steps.buildx.outputs.name }}
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }}
           cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache-new
           buildkitd-flags: --debug
 
-
-      # (4)
-      - name: Move cache
-        run: |
-          rm -rf /tmp/.buildx-cache
-          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
-          dir
 
   deploy:
     needs: build
