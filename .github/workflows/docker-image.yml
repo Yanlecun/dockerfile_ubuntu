@@ -69,10 +69,9 @@ jobs:
           password: ${{ secrets.UBUNTU_TOKEN }}
           buildkitd-flags: --debug
       - name: Docker run
+      
         run: |
-          sudo docker stop cicd
-          sudo docker ps -q --filter "name={woosong}" | grep -q . && docker stop {woosong} && docker rm -fv {woosong}
-          sudo docker run -d -p 8080:8080 --name cicd --restart always ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }}
+          sudo docker ps -q --filter "name=cicd" | grep -q . && docker stop cicd && docker rm -fv cicd
           sudo docker run -d -p 8080:8080 --rm --name cicd ${{ env.DOCKER_IMAGE }}:${{ env.VERSION }} 
           
 # --restart always <=> --rm
