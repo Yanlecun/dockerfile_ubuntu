@@ -8,7 +8,7 @@ on:
   push:
     branches: [ test,main,master ]
 env:
-  DOCKER_IMAGE: ghcr.io/yanlecun/dockerfile_ubuntu # 예를 들면, ghcr.io/dolphago/github-follow-unfollow
+  DOCKER_IMAGE: ghcr.io/thddn19/dockerfile_ubuntu # 예를 들면, ghcr.io/dolphago/github-follow-unfollow
   VERSION: ${{ github.sha }}
   
 jobs:
